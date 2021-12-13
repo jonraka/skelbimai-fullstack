@@ -1,0 +1,23 @@
+GET http://localhost:3013/ads/1
+###
+GET http://localhost:3013/ads/
+###
+DELETE http://localhost:3013/ads/10
+###
+POST http://localhost:3013/auth/register
+Content-Type: application/json
+
+{
+    "username": "tagsdgasd",
+    "password": "testt",
+    "email": "test@test.com"
+}
+
+###
+POST http://localhost:3013/auth/login
+Content-Type: application/json
+
+{
+    "password": "testt",
+    "email": "test@test.com"
+}
