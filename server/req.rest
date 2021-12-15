@@ -8,9 +8,9 @@ POST http://localhost:3013/auth/register
 Content-Type: application/json
 
 {
-    "username": "tagsdgasd",
-    "password": "testt",
-    "email": "test@test.com"
+    "username": "asdgasdgxz",
+    "password": "asdgasdgxz@fdasafsd.com",
+    "email": "asdgasdgxz@fdasafsd.com"
 }
 
 ###
@@ -18,6 +18,6 @@ POST http://localhost:3013/auth/login
 Content-Type: application/json
 
 {
-    "password": "testt",
-    "email": "test@test.com"
+    "email": "asdgasdgxz@fdasafsd.com",
+    "password": "asdgasdgxz"
 }

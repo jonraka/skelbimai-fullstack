@@ -7,7 +7,7 @@ dotenv.config();
 import { expressErrorHandle } from './utils/middleware';
 import { sendNotFound } from './utils/misc';
 
-import adsRoute from './routes/ads';
+import listingsRoute from './routes/listings';
 import authRoute from './routes/auth';
 
 const app = express();
@@ -19,8 +19,8 @@ app.use(express.json());
 app.use(express.static('./public'));
 app.use(expressErrorHandle('Invalid JSON'));
 
-app.use('/ads', adsRoute);
-app.use('/auth', authRoute);
+app.use('/api/listings', listingsRoute);
+app.use('/api/auth', authRoute);
 
 app.use('*', (req, res) => {
   sendNotFound(res);

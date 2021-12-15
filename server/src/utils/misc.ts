@@ -1,5 +1,4 @@
 import express from 'express';
-import Joi from 'joi';
 
 export function sendSuccess(res: express.Response, data: Object) {
   return res.status(200).send({

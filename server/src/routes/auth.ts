@@ -12,7 +12,7 @@ const registerSchema = Joi.object({
   password: Joi.string()
     .min(5)
     .max(50)
-    .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+    // .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
     .required(),
   repeat_password: Joi.ref('password'),
   email: Joi.string().email().required(),
@@ -23,7 +23,7 @@ const loginSchema = Joi.object({
   password: Joi.string()
     .min(5)
     .max(50)
-    .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+    // .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
     .required(),
 });
 
@@ -86,7 +86,7 @@ router.post('/login', (req, res) => {
     const userInDatabase = dbResponse?.[0];
 
     if (!userInDatabase?.password) {
-      sendUserError(res, 'User not found');
+      sendUserError(res, 'Email was not found');
       return;
     }
 
@@ -100,23 +100,31 @@ router.post('/login', (req, res) => {
       return;
     }
 
-    if(userInDatabase?.access_token === null){
+    if (userInDatabase?.access_token === null) {
       let newAccessToken = `${userInDatabase.id}-${nanoid(40)}`;
 
-      const [dbNewTokenInsertion]: any = await connection.execute('UPDATE users SET access_token = ?, token_renewed = current_timestamp() WHERE id = ? LIMIT 1', [newAccessToken, userInDatabase.id]);
+      const [dbNewTokenInsertion]: any = await connection.execute(
+        'UPDATE users SET access_token = ?, token_renewed = current_timestamp() WHERE id = ? LIMIT 1',
+        [newAccessToken, userInDatabase.id]
+      );
 
-      if(dbNewTokenInsertion.affectedRows > 0){
+      if (dbNewTokenInsertion.affectedRows > 0) {
         sendSuccess(res, {
-          access_token: newAccessToken
-        })
-      }else{
+          accessToken: newAccessToken,
+          id: Number(userInDatabase.id),
+          username: userInDatabase.username,
+          email: userInDatabase.email,
+        });
+      } else {
         throw new Error(`Can't update a new token`);
       }
-      
-    }else{
+    } else {
       sendSuccess(res, {
-        access_token: userInDatabase?.access_token
-      })
+        accessToken: userInDatabase.access_token,
+        id: Number(userInDatabase.id),
+        username: userInDatabase.username,
+        email: userInDatabase.email,
+      });
     }
   }).catch((err) => {
     console.log(err);
@@ -145,6 +153,41 @@ router.post('/login', (req, res) => {
   //     console.log(err);
   //     sendServerError(res, 'Internal Error');
   //   });
+});
+
+router.get('/check-token', async (req, res) => {
+  const { authentication } = req.headers;
+
+  if (!authentication) {
+    sendUserError(res, 'No token provided');
+    return;
+  }
+
+  const token = String(authentication).replace('Bearer ', '');
+
+  if (token.length < 30) {
+    sendUserError(res, 'Invalid token provided');
+    return;
+  }
+
+  sqlConnect(
+    'SELECT username, email, id FROM users WHERE access_token = ? LIMIT 1',
+    [token]
+  )
+    .then(([data]) => {
+      if (!data?.[0]?.username) throw new Error('no user found');
+      sendSuccess(res, {
+        loggedIn: true,
+        username: data[0].username,
+        email: data[0].email,
+        id: data[0].id,
+        accessToken: token,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      sendSuccess(res, { loggedIn: false });
+    });
 });
 
 export default router;
