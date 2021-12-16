@@ -1,10 +1,11 @@
 import Container from '../Components/Main/Container';
 import styled from 'styled-components';
+import ListingsMain from '../Components/Main/ListingsMain';
 
 const StyledAllAds = styled.div`
   margin-top: 50px;
 
-  & > * {
+  & > h1, & > h3 {
     text-align: center;
   }
 
@@ -13,18 +14,13 @@ const StyledAllAds = styled.div`
   }
 `;
 
-const StyledAdsList = styled.div`
-  background-color: red;
-  height: 200px;
-`;
-
-export default function AllAdsPage() {
+export default function AllListingsPage() {
   return (
     <Container>
       <StyledAllAds>
-        <h1>Ads</h1>
+        <h1>Listings</h1>
         <h3>Browse to Our Listings</h3>
-        <StyledAdsList />
+        <ListingsMain />
       </StyledAllAds>
     </Container>
   );

@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { FeaturedAdsInterface } from '../../mainInterfaces.d';
+import noImage from '../../assets/no-image.jpg';
 
 const StyledCard = styled.div`
   min-width: 220px;
@@ -59,25 +60,25 @@ const StyledPricingRow = styled.div`
   margin: 10px 20px;
 `;
 
-export default function ItemCard({ data }: { data: FeaturedAdsInterface }) {
+export default function FeaturedListingsCard({ data }: { data: FeaturedAdsInterface }) {
   return (
     <StyledCard>
-      <Link to={`/ads/${data.id}`}>
+      <Link to={`/listings/${data.id}`}>
         <StyledImageWrapper>
           <StyledImage
-            src={'#'}
+            src={noImage}
             referrerPolicy="no-referrer"
             alt="im"
           ></StyledImage>
         </StyledImageWrapper>
       </Link>
       <StyledTitle>
-        <Link to={`/ads/${data.id}`}>{data.title}</Link>
+        <Link to={`/listings/${data.id}`}>{data.title}</Link>
       </StyledTitle>
       <StyledRow>X {new Date(data.created).toLocaleString('lt-LT')}</StyledRow>
       <StyledRow>X {data.city}</StyledRow>
       <StyledRow>
-        X <Link to={`/ads/${data.id}`}>{data.category}</Link>
+        X <Link to={`/listings/${data.id}`}>{data.category}</Link>
       </StyledRow>
       <StyledPricingRow>€{data.price}</StyledPricingRow>
     </StyledCard>

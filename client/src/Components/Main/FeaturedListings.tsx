@@ -1,4 +1,4 @@
-import FeaturedAdCard from './FeaturedAdCard';
+import FeaturedListingsCard from './FeaturedListingsCard';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { FeaturedAdsInterface } from '../../mainInterfaces.d';
@@ -16,7 +16,7 @@ interface StateInterface {
   error: null | string;
 }
 
-export default function FeaturedAds() {
+export default function FeaturedListings() {
   const [state, setState] = useState<StateInterface>({
     loading: true,
     data: null,
@@ -25,7 +25,7 @@ export default function FeaturedAds() {
 
   useEffect(() => {
     let isSubscribed = true;
-    fetch(process.env.REACT_APP_BACKEND_URL + '/ads/featured')
+    fetch(process.env.REACT_APP_BACKEND_URL + '/api/listings/featured')
       .then((res) => {
         if (res.status !== 200) throw new Error('Internal Error');
         return res.json();
@@ -60,7 +60,7 @@ export default function FeaturedAds() {
         : state.error
         ? state.error
         : (state.data || []).map((data) => (
-            <FeaturedAdCard key={`ad-${data.id}`} data={data} />
+            <FeaturedListingsCard key={`ad-${data.id}`} data={data} />
           ))}
     </StyledCardsList>
   );

@@ -110,6 +110,7 @@ router.get('/:id', (req, res) => {
 router.post('/', express.urlencoded({extended: true}), (req, res) => {
   const { authentication } = req.headers;
   console.log(req.body)
+  console.log(req.headers)
 
   if (!authentication) {
     sendNotAuthorized(res, 'No token provided');

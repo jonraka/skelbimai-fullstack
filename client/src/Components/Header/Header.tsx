@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import Container from '../Main/Container';
 import { NavLink } from 'react-router-dom';
 import TopBar from './TopBar';
+import { useAuthContext } from '../../store/authContext';
 
 const StyledHeaderBackground = styled.div`
   background-color: white;
@@ -71,6 +72,7 @@ const StyledPostAddButton = styled(NavLink)`
 `;
 
 export default function Header() {
+  const { authState } = useAuthContext();
   return (
     <>
       <TopBar />
@@ -80,13 +82,22 @@ export default function Header() {
             <StyledLogo>Logo</StyledLogo>
             <StyledNavList>
               <NavLink to="/">Home</NavLink>
-              <NavLink to="/ads">All Ads</NavLink>
+              <NavLink to="/listings">All Ads</NavLink>
               <NavLink to="/pages">Pages</NavLink>
               <NavLink to="/blog">Blog</NavLink>
               <NavLink to="/contact">Contact</NavLink>
-              <NavLink to="/register">Register</NavLink>
+              {!authState.loggedIn ? (
+                <>
+                  <NavLink to="/register">Register</NavLink>
+                  <NavLink to="/login">Login</NavLink>
+                </>
+              ) : (
+                <>
+                  <NavLink to="/logout">Logout</NavLink>
+                </>
+              )}
             </StyledNavList>
-            <StyledPostAddButton to="/">Post Your Ad</StyledPostAddButton>
+            {authState.loggedIn ? <StyledPostAddButton to="/listings/add">Post Your Ad</StyledPostAddButton> : <div></div>}
           </StyledHeader>
         </Container>
       </StyledHeaderBackground>
